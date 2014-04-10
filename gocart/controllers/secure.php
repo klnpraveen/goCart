@@ -25,6 +25,10 @@ class Secure extends Front_Controller {
 		{
 			redirect('secure/my_account/');
 		}
+		
+		$data['page_title']	= 'Login';
+		$data['gift_cards_enabled'] = $this->gift_cards_enabled;
+		
 		$this->load->helper('form');
 		$data['redirect']	= $this->session->flashdata('redirect');
 		$submitted 		= $this->input->post('submitted');
@@ -42,7 +46,15 @@ class Secure extends Front_Controller {
 					//if there is not a redirect link, send them to the my account page
 					$redirect = 'secure/my_account';
 				}
-				
+				//to login via ajax
+				if($ajax)
+				{
+					die(json_encode(array('result'=>true)));
+				}
+				else
+				{
+					redirect($redirect);
+				}
 				
 			}
 			else
@@ -50,18 +62,25 @@ class Secure extends Front_Controller {
 				//this adds the redirect back to flash data if they provide an incorrect credentials
 				
 				
-				
+				//to login via ajax
+				if($ajax)
+				{
+					die(json_encode(array('result'=>false)));
+				}
+				else
+				{
 					$this->session->set_flashdata('redirect', $redirect);
 					$this->session->set_flashdata('error', lang('login_failed'));
 					
 					redirect('secure/login_customer');
-				
+				}
 			}
 		}
+		
 		// load other page content 
 		//$this->load->model('banner_model');
 		$this->load->helper('directory');
-	
+			
 		//if they want to limit to the top 5 banners and use the enable/disable on dates, add true to the get_banners function
 		//$data['banners']	= $this->banner_model->get_banners();
 		//$data['ads']		= $this->banner_model->get_banners(true);
@@ -134,7 +153,7 @@ class Secure extends Front_Controller {
 		// load other page content 
 		//$this->load->model('banner_model');
 		$this->load->helper('directory');
-	
+			
 		//if they want to limit to the top 5 banners and use the enable/disable on dates, add true to the get_banners function
 		//$data['banners']	= $this->banner_model->get_banners();
 		//$data['ads']		= $this->banner_model->get_banners(true);
@@ -149,6 +168,8 @@ class Secure extends Front_Controller {
 		redirect('secure/login_customer');
 	}
 	
+	
+
 	function register()
 	{
 	

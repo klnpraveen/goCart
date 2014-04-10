@@ -17,7 +17,8 @@
 		</div><!--end of header -section-->
 		<div class="form-section">
 			<div class="container">
-			<?php echo form_open('secure/login', 'class="form-horizontal"'); ?>
+
+			<?php echo form_open('secure/login_customer', 'class="form-horizontal"'); ?>
 				<div class="form-inputs">
 					<h4>Member Area</h4>
 					<div class="input-group">
