@@ -11,29 +11,35 @@
 		<div class="header-section">
 			<a href="#"><img src="<?php echo base_url(); ?>images/loginlogo.png" alt=""></a>
 			<ul class="menu">
-				<li><a href="index.html">Home</a></li>
-				<li><a href="register.html">Sign up</a></li>
+				<li><a href="<?php echo base_url(); ?>">Home</a></li>
+				<li><a href="<?php echo base_url('index.php'); ?>/secure/register">Sign up</a></li>
 			</ul>
 		</div><!--end of header -section-->
 		<div class="form-section">
 			<div class="container">
-			<?php echo form_open($this->config->item('admin_folder').'/login') ?>
+			<?php echo form_open('secure/login', 'class="form-horizontal"'); ?>
 				<div class="form-inputs">
 					<h4>Member Area</h4>
 					<div class="input-group">
-						<input type="text" class="form-control" placeholder="Email">
+						<input type="text" name="email" class="form-control" placeholder="Email">
 						<span class="input-group-addon"><i class="fa fa-user"></i></span>
 					</div>
 					<div class="input-group">
-						<input type="password" class="form-control" placeholder="Password">
+						<input type="password" name="password" class="form-control" placeholder="Password" autocomplete="off">
 						<span class="input-group-addon"><i class="fa fa-lock"></i></span>
 					</div>
 
-					<input class="polaris-input" type="checkbox" id="inlineCheckbox1" value="option1"> <span class="check-text">Remember me</span> 
-					<input class="btn btn-info pull-right" type="submit" value="Sign In"/>
-					<h5><a href="forgot.html" target="_blank">Forgot Your Password ?</a></h5>
-				</div>	
-			<?php echo  form_close(); ?>				
+					<input class="polaris-input" type="checkbox" name="remember" value="true" /> <span class="check-text">Remember me</span> 
+					<input class="btn btn-info pull-right" name="submit" type="submit" value="Sign In"/>
+					<h5><a href="forgot" target="_parent">Forgot Your Password ?</a></h5>
+				</div>
+									
+				
+					
+					<input type="hidden" value="<?php echo $redirect; ?>" name="redirect"/>
+				<input type="hidden" value="submitted" name="submitted"/>
+			<?php echo  form_close(); ?>	
+						
 			</div>
 		</div><!--emd of form-section-->
 		<div class="footer">

@@ -16,9 +16,58 @@ class Secure extends Front_Controller {
 	{
 		show_404();
 	}
-	function login_customer()
+	function login_customer($ajax = false)
 	{
-		$this->load->view('login_customer');
+		//find out if they're already logged in, if they are redirect them to the my account page
+		$redirect	= $this->Customer_model->is_logged_in(false, false);
+		//if they are logged in, we send them back to the my_account by default, if they are not logging in
+		if ($redirect)
+		{
+			redirect('secure/my_account/');
+		}
+		$this->load->helper('form');
+		$data['redirect']	= $this->session->flashdata('redirect');
+		$submitted 		= $this->input->post('submitted');
+		if ($submitted)
+		{
+			$email		= $this->input->post('email');
+			$password	= $this->input->post('password');
+			$remember   = $this->input->post('remember');
+			$redirect	= $this->input->post('redirect');
+			$login		= $this->Customer_model->login($email, $password, $remember);
+			if ($login)
+			{
+				if ($redirect == '')
+				{
+					//if there is not a redirect link, send them to the my account page
+					$redirect = 'secure/my_account';
+				}
+				
+				
+			}
+			else
+			{
+				//this adds the redirect back to flash data if they provide an incorrect credentials
+				
+				
+				
+					$this->session->set_flashdata('redirect', $redirect);
+					$this->session->set_flashdata('error', lang('login_failed'));
+					
+					redirect('secure/login_customer');
+				
+			}
+		}
+		// load other page content 
+		//$this->load->model('banner_model');
+		$this->load->helper('directory');
+	
+		//if they want to limit to the top 5 banners and use the enable/disable on dates, add true to the get_banners function
+		//$data['banners']	= $this->banner_model->get_banners();
+		//$data['ads']		= $this->banner_model->get_banners(true);
+		$data['categories']	= $this->Category_model->get_categories_tiered(0);
+			
+		$this->load->view('login_customer', $data);
 	}
 	
 	function login($ajax = false)
@@ -91,13 +140,13 @@ class Secure extends Front_Controller {
 		//$data['ads']		= $this->banner_model->get_banners(true);
 		$data['categories']	= $this->Category_model->get_categories_tiered(0);
 			
-		$this->view('login', $data);
+		$this->load->view('login_customer', $data);
 	}
 	
 	function logout()
 	{
 		$this->Customer_model->logout();
-		redirect('secure/login');
+		redirect('secure/login_customer');
 	}
 	
 	function register()
@@ -260,7 +309,10 @@ class Secure extends Front_Controller {
 			return TRUE;
 		}
 	}
-	
+	function forgot()
+	{
+		$this->load->view('forgot');
+	}
 	function forgot_password()
 	{
 		$data['page_title']	= lang('forgot_password');
